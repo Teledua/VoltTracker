@@ -1,11 +1,14 @@
 import React from 'react';
 import { ElectricBill } from '../types';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
-import { TrendingUp, Calendar, DollarSign, Clock } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { TrendingUp, Calendar, Clock } from 'lucide-react';
 
 interface DashboardProps {
   bills: ElectricBill[];
 }
+
+// Naira Symbol
+const NAIRA = '₦';
 
 export const Dashboard: React.FC<DashboardProps> = ({ bills }) => {
   // Sort bills by date inserted for charts
@@ -40,10 +43,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ bills }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Total Spent</p>
-              <p className="text-2xl font-bold text-gray-900">${totalSpent.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-gray-900">{NAIRA}{totalSpent.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
             </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <DollarSign className="w-6 h-6 text-green-600" />
+            <div className="bg-green-100 p-3 rounded-full text-green-600 font-bold text-xl">
+              {NAIRA}
             </div>
           </div>
         </div>
@@ -52,7 +55,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ bills }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-500">Avg. Bill Amount</p>
-              <p className="text-2xl font-bold text-gray-900">${avgSpent.toFixed(2)}</p>
+              <p className="text-2xl font-bold text-gray-900">{NAIRA}{avgSpent.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
             </div>
             <div className="bg-blue-100 p-3 rounded-full">
               <TrendingUp className="w-6 h-6 text-blue-600" />
@@ -101,10 +104,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ bills }) => {
               <YAxis 
                 stroke="#9CA3AF"
                 fontSize={12}
-                tickFormatter={(val) => `$${val}`}
+                tickFormatter={(val) => `${NAIRA}${val}`}
               />
               <Tooltip 
-                formatter={(value: number) => [`$${value.toFixed(2)}`, 'Amount']}
+                formatter={(value: number) => [`${NAIRA}${value.toLocaleString()}`, 'Amount']}
                 labelFormatter={(label) => new Date(label).toLocaleDateString()}
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
               />

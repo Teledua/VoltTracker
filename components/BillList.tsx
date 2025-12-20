@@ -46,7 +46,7 @@ export const BillList: React.FC<BillListProps> = ({ bills, onDelete }) => {
                 <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bill.datePurchased}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{bill.dateInserted}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-700">${bill.amountPurchased.toFixed(2)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-700">₦{bill.amountPurchased.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {bill.receiptImage ? (
                       <button 

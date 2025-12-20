@@ -15,15 +15,15 @@ export const analyzeElectricityUsage = async (bills: ElectricBill[]): Promise<st
 
   const billsJson = JSON.stringify(bills.slice(-12));
   const prompt = `
-    I have a dataset of electricity bill purchases. 
+    I have a dataset of electricity bill purchases in Nigerian Naira (₦). 
     Here is the data (Last 12 records):
     ${billsJson}
 
     Please analyze this data and provide a concise report in Markdown format.
-    1. **Spending Trend**: Are costs going up or down?
+    1. **Spending Trend**: Are costs going up or down in ₦?
     2. **Consumption Efficiency**: Calculate the average days a purchase lasts.
-    3. **Anomalies**: Identify any strange records.
-    4. **Recommendations**: Give 3 tips to reduce usage.
+    3. **Anomalies**: Identify any strange records (e.g., unusually high Naira amounts for short durations).
+    4. **Recommendations**: Give 3 tips to reduce usage specifically for a Nigerian context if possible.
   `;
 
   try {
@@ -44,7 +44,7 @@ export const extractDataFromReceipt = async (base64Image: string): Promise<{ amo
   // Extract just the base64 part
   const data = base64Image.split(',')[1] || base64Image;
 
-  const prompt = "Extract the total amount and the date of purchase from this receipt. Return the date in YYYY-MM-DD format.";
+  const prompt = "Extract the total amount (likely in Nigerian Naira ₦) and the date of purchase from this receipt. Return the date in YYYY-MM-DD format. Ensure the amount is just the number.";
 
   try {
     const response = await ai.models.generateContent({
