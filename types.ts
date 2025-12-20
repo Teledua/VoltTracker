@@ -5,6 +5,7 @@ export interface ElectricBill {
   dateFinished: string;  // YYYY-MM-DD
   amountPurchased: number;
   notes?: string;
+  receiptImage?: string; // base64 data URL
 }
 
 export interface AnalysisResult {

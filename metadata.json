@@ -1,5 +1,7 @@
 {
   "name": "VoltTracker",
   "description": "A comprehensive electricity bill tracking application that allows users to record purchase dates, usage durations, and amounts. Features include data visualization, AI-powered consumption analysis, and Excel export capabilities.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "camera"
+  ]
 }
