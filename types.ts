@@ -1,3 +1,4 @@
+
 export interface ElectricBill {
   id: string;
   datePurchased: string; // YYYY-MM-DD
@@ -17,5 +18,6 @@ export interface AnalysisResult {
 export enum ViewState {
   DASHBOARD = 'DASHBOARD',
   ADD_ENTRY = 'ADD_ENTRY',
+  EDIT_ENTRY = 'EDIT_ENTRY',
   LIST = 'LIST'
 }

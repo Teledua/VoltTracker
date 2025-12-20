@@ -1,15 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ElectricBill } from '../types';
-import { Plus, Save, X, Camera, Upload, Sparkles, RefreshCw } from 'lucide-react';
+import { Plus, Save, X, Camera, Upload, Sparkles, RefreshCw, Pencil } from 'lucide-react';
 import { extractDataFromReceipt } from '../services/geminiService';
 
 interface BillFormProps {
   onSave: (bill: ElectricBill) => void;
   onCancel: () => void;
+  initialData?: ElectricBill | null;
 }
 
-export const BillForm: React.FC<BillFormProps> = ({ onSave, onCancel }) => {
-  const [formData, setFormData] = useState<Omit<ElectricBill, 'id'>>({
+export const BillForm: React.FC<BillFormProps> = ({ onSave, onCancel, initialData }) => {
+  const isEditMode = !!initialData;
+  
+  const [formData, setFormData] = useState<Omit<ElectricBill, 'id'> & { id?: string }>({
     datePurchased: new Date().toISOString().split('T')[0],
     dateInserted: new Date().toISOString().split('T')[0],
     dateFinished: '',
@@ -17,6 +20,12 @@ export const BillForm: React.FC<BillFormProps> = ({ onSave, onCancel }) => {
     notes: '',
     receiptImage: ''
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
 
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isExtracting, setIsExtracting] = useState(false);
@@ -100,17 +109,17 @@ export const BillForm: React.FC<BillFormProps> = ({ onSave, onCancel }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave({
-      id: crypto.randomUUID(),
+      id: isEditMode ? initialData!.id : crypto.randomUUID(),
       ...formData
-    });
+    } as ElectricBill);
   };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
         <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
-          <Plus className="w-5 h-5 text-blue-600" />
-          Add New Bill Entry
+          {isEditMode ? <Pencil className="w-5 h-5 text-indigo-600" /> : <Plus className="w-5 h-5 text-blue-600" />}
+          {isEditMode ? 'Edit Bill Entry' : 'Add New Bill Entry'}
         </h3>
         <button onClick={onCancel} className="text-gray-400 hover:text-gray-500 transition-colors">
           <X className="w-5 h-5" />
@@ -234,6 +243,21 @@ export const BillForm: React.FC<BillFormProps> = ({ onSave, onCancel }) => {
             />
           </div>
 
+          <div>
+            <label htmlFor="dateFinished" className="block text-sm font-medium text-gray-700 mb-1">
+              Date Electricity Finished
+            </label>
+            <input
+              type="date"
+              name="dateFinished"
+              id="dateFinished"
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 border p-2"
+              value={formData.dateFinished}
+              onChange={handleChange}
+            />
+            <p className="mt-1 text-xs text-gray-500">Fill this once the units run out to track duration.</p>
+          </div>
+
           {/* Notes */}
           <div className="md:col-span-2">
             <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
@@ -264,7 +288,7 @@ export const BillForm: React.FC<BillFormProps> = ({ onSave, onCancel }) => {
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 gap-2"
           >
             <Save className="w-4 h-4" />
-            Save Record
+            {isEditMode ? 'Update Record' : 'Save Record'}
           </button>
         </div>
       </form>
