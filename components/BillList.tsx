@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { ElectricBill } from '../types';
-import { Trash2, Eye, X } from 'lucide-react';
+import { Trash2, Eye, X, Pencil } from 'lucide-react';
 
 interface BillListProps {
   bills: ElectricBill[];
   onDelete: (id: string) => void;
+  onEdit: (bill: ElectricBill) => void;
 }
 
-export const BillList: React.FC<BillListProps> = ({ bills, onDelete }) => {
+export const BillList: React.FC<BillListProps> = ({ bills, onDelete, onEdit }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   if (bills.length === 0) {
@@ -33,6 +34,7 @@ export const BillList: React.FC<BillListProps> = ({ bills, onDelete }) => {
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Purchased</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Inserted</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Finished</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Receipt</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -46,6 +48,7 @@ export const BillList: React.FC<BillListProps> = ({ bills, onDelete }) => {
                 <tr key={bill.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{bill.datePurchased}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{bill.dateInserted}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{bill.dateFinished || '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-700">₦{bill.amountPurchased.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {bill.receiptImage ? (
@@ -71,8 +74,19 @@ export const BillList: React.FC<BillListProps> = ({ bills, onDelete }) => {
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onClick={() => onDelete(bill.id)} className="text-red-600 hover:text-red-900 transition-colors p-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                    <button 
+                      onClick={() => onEdit(bill)} 
+                      className="text-indigo-600 hover:text-indigo-900 transition-colors p-2"
+                      title="Edit Entry"
+                    >
+                      <Pencil className="w-5 h-5" />
+                    </button>
+                    <button 
+                      onClick={() => onDelete(bill.id)} 
+                      className="text-red-600 hover:text-red-900 transition-colors p-2"
+                      title="Delete Entry"
+                    >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </td>
